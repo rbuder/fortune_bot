@@ -38,6 +38,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 /help - print usage
 /fortune - print a random fortune
 /fortune dbs - list fortune databases
+/fortune odbs - list offensive fortune databases
 /fortune db $db - print a random fortune from a select db
 """
     await update.message.reply_text(help)
@@ -56,9 +57,13 @@ async def fortune(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             await update.message.reply_text(dbs.keys())
         elif args.split(' ')[0] == "db":
             dbs = wisdom.dbs()
+            odbs = wisdom.dbs(off=True)
             db = args.split(' ')[1]
             logger.info(db)
-            await update.message.reply_text(wisdom.get_fortune(random=False, db=dbs[db]))
+            if db in list(dbs.keys()):
+                await update.message.reply_text(wisdom.get_fortune(random=False, db=dbs[db]))
+            elif db in list(odbs.keys()):
+                await update.message.reply_text(wisdom.get_fortune(random=False, db=odbs[db]))
 
 def main() -> None:
     application = Application.builder().token(config.TOKEN).build()
