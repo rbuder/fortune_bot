@@ -40,6 +40,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 /fortune dbs - list fortune databases
 /fortune odbs - list offensive fortune databases
 /fortune db $db - print a random fortune from a select db
+/fortune odb $odb - print a random offensive fortune from a select db
 """
     await update.message.reply_text(help)
 
