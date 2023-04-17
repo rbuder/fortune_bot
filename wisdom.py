@@ -42,5 +42,6 @@ def get_fortune(random=True, db=None):
         quote = fortune.get_random_fortune(get_random_fortune_db())
     else:
         quote = fortune.get_random_fortune(db)
-        quote = codecs.decode(quote, 'rot_13')
+        if "off" in db:
+            quote = codecs.decode(quote, 'rot_13')
     return quote
