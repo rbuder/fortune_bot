@@ -35,11 +35,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     help = """
-    /help - print usage
-    /fortune - print a random fortune
-    /fortune dbs - list fortune databases
-    /fortune db $db - print a random fortune from a select db
-    """
+/help - print usage
+/fortune - print a random fortune
+/fortune dbs - list fortune databases
+/fortune db $db - print a random fortune from a select db
+"""
     await update.message.reply_text(help)
 
 async def fortune(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

@@ -4,6 +4,7 @@ import fortune
 import os
 import random
 import config
+import codecs
 
 def dbs():
     fortunes = []
@@ -14,6 +15,13 @@ def dbs():
             pass
         else:
             fortunes.append(os.path.join(config.REPOPATH, file))
+    for file in os.listdir(f"{config.REPOPATH}/off"):
+        if file.endswith(".dat"):
+            pass
+        elif file.endswith(".u8"):
+            pass
+        else:
+            fortunes.append(os.path.join(f"{config.REPOPATH}/off", file))
     return fortunes
 
 def get_random_fortune_db():
