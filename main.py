@@ -44,7 +44,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await update.message.reply_text(help)
 
 async def fortune(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    allowed_args = ["dbs", "db"]
+    allowed_args = ["dbs", "odbs", "db"]
     args = update.message.text.replace('/fortune', '').strip()
     logger.info(args)
     if args.split(' ')[0] not in allowed_args:
