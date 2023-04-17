@@ -7,14 +7,15 @@ import config
 import codecs
 
 def dbs(off=False):
-    fortunes = []
+    fortunes = {}
     for file in os.listdir(config.REPOPATH):
         if file.endswith(".dat"):
             pass
         elif file.endswith(".u8"):
             pass
         else:
-            fortunes.append(os.path.join(config.REPOPATH, file))
+            db_name = file.split('/')[-1]
+            fortunes[db_name] = file
     if off == True:
         for file in os.listdir(f"{config.REPOPATH}/off"):
             if file.endswith(".dat"):
@@ -22,7 +23,8 @@ def dbs(off=False):
             elif file.endswith(".u8"):
                 pass
             else:
-                fortunes.append(os.path.join(f"{config.REPOPATH}/off", f"off/{file}"))
+                db_name = file.split('/')[-1]
+                fortunes[db_name] = file
     return fortunes
 
 def get_random_fortune_db():
@@ -32,7 +34,7 @@ def get_random_fortune_db():
     except:
         r = random
 
-    return fortune_dbs[r.randint(0, len(fortune_dbs)-1)]
+    return fortune_dbs[fortune_dbs.keyS()[r.randint(0, len(fortune_dbs)-1)]]
 
 def get_fortune(random=True, db=None):
     if random:
