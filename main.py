@@ -55,6 +55,9 @@ async def fortune(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         if args.split(' ')[0] == "dbs":
             dbs = wisdom.dbs()
             await update.message.reply_text(dbs.keys())
+        elif args.split(' ')[0] == "odbs":
+            dbs = wisdom.dbs(off=True)
+            await update.message.reply_text(dbs.keys())
         elif args.split(' ')[0] == "db":
             dbs = wisdom.dbs()
             odbs = wisdom.dbs(off=True)
