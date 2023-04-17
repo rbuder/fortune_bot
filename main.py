@@ -44,7 +44,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await update.message.reply_text(help)
 
 async def fortune(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    allowed_args = ["dbs", "odbs", "db"]
+    allowed_args = ["dbs", "odbs", "db", "odb"]
     args = update.message.text.replace('/fortune', '').strip()
     logger.info(args)
     if args.split(' ')[0] not in allowed_args:
@@ -60,13 +60,14 @@ async def fortune(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             await update.message.reply_text(list(dbs.keys()))
         elif args.split(' ')[0] == "db":
             dbs = wisdom.dbs()
-            odbs = wisdom.dbs(off=True)
             db = args.split(' ')[1]
             logger.info(db)
-            if db in list(dbs.keys()):
-                await update.message.reply_text(wisdom.get_fortune(random=False, db=dbs[db]))
-            elif db in list(odbs.keys()):
-                await update.message.reply_text(wisdom.get_fortune(random=False, db=odbs[db]))
+            await update.message.reply_text(wisdom.get_fortune(random=False, db=dbs[db]))
+        elif args.split(' ')[0] == "odb":
+            dbs = wisdom.dbs(off=True)
+            db = args.split(' ')[1]
+            logger.info(db)
+            await update.message.reply_text(wisdom.get_fortune(random=False, db=dbs[db]))
 
 def main() -> None:
     application = Application.builder().token(config.TOKEN).build()
