@@ -23,5 +23,8 @@ def get_random_fortune_db():
 
     return fortune_dbs[r.randint(0, len(fortune_dbs)-1)]
 
-def get_fortune():
-    return fortune.get_random_fortune(get_random_fortune_db())
+def get_fortune(random=True, db=None):
+    if random:
+        return fortune.get_random_fortune(get_random_fortune_db())
+    else:
+        return fortune.get_random_fortune(db)

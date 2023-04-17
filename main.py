@@ -3,6 +3,7 @@
 import logging
 import config
 import wisdom
+import os
 
 from telegram import __version__ as TG_VER
 
@@ -36,9 +37,22 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await update.message.reply_text("Help!")
 
 async def fortune(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    fortune = wisdom.get_fortune()
-    logger.info(fortune)
-    await update.message.reply_text(fortune)
+    allowed_args = ["dbs", "db"]
+    args = update.message.text.replace('/fortune', '').strip()
+    logger.info(args)
+    if args.split(' ')[0] not in allowed_args:
+        fortune = wisdom.get_fortune()
+        logger.info(fortune)
+        await update.message.reply_text(fortune)
+    else:
+        if args.split(' ')[0] == "dbs":
+            dbs = wisdom.dbs()
+            dbs = [db.split('/')[-1] for db in dbs]
+            await update.message.reply_text(dbs)
+        elif args.split(' ')[0] == "db":
+            fortune_db = os.path.join(config.REPOPATH, args.split(' ')[1])
+            logger.info(fortune_db)
+            await update.message.reply_text(wisdom.get_fortune(random=False, db=fortune_db))
 
 def main() -> None:
     application = Application.builder().token(config.TOKEN).build()
