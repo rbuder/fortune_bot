@@ -10,6 +10,8 @@ def dbs():
     for file in os.listdir(config.REPOPATH):
         if file.endswith(".dat"):
             pass
+        elif file.endswith(".u8"):
+            pass
         else:
             fortunes.append(os.path.join(config.REPOPATH, file))
     return fortunes
