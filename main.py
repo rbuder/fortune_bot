@@ -40,7 +40,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 /fortune odbs - list offensive fortune databases
 /fortune db $db - print a random fortune from a select db
 /fortune odb $odb - print a random offensive fortune from a select db
-/xkcd - get latest xkcd
+/comic [xkcd,turnoff.us,phdcomics,theoatmeal,invisiblebread] - get latest comic, default xkcd
 """
     await update.message.reply_text(help)
 
@@ -70,12 +70,32 @@ async def fortune(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             logger.info(db)
             await update.message.reply_text(wisdom.get_fortune(random=False, db=dbs[db]))
 
-async def xkcd(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    logger.info("xkcd")
+async def comic(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.info("comic")
     import feedparser
     from bs4 import BeautifulSoup
 
-    rss_url = "https://xkcd.com/rss.xml"
+    args = update.message.text.replace('/comic', '').strip()
+    url_map = {
+        "xkcd": "https://xkcd.com/rss.xml",
+        "turnoff.us": "https://turnoff.us/feed.xml",
+        "phdcomics": "https://phdcomics.com/gradfeed.php",
+        # "commitstrip": "https://www.commitstrip.com/en/feed/",
+        "theoatmeal": "https://feeds.feedburner.com/oatmealfeed",
+        "invisiblebread": "http://feeds.feedburner.com/InvisibleBread"
+    }
+
+    allowed_args = url_map.keys()
+
+    if args.split(' ')[0] not in allowed_args:
+        comic = "xkcd"
+    else:
+        comic = args.split(' ')[0]
+
+    logger.info(comic)
+
+
+    rss_url = url_map[comic]
     feed = feedparser.parse(rss_url)
 
     latest = feed['entries'][0]
@@ -96,7 +116,7 @@ def main() -> None:
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("fortune", fortune))
-    application.add_handler(CommandHandler("xkcd", xkcd))
+    application.add_handler(CommandHandler("comic", comic))
 
     application.run_polling()
 
