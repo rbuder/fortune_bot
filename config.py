@@ -1,4 +1,6 @@
 #!/usr/bin/env python
 
-TOKEN="xxxxxxxxxx:zzzzzzzzzzzzzzzzzzzzzzzzzz"
+import os
+
+TOKEN=os.getenv("TOKEN")
 REPOPATH="/opt/homebrew/share/games/fortunes"

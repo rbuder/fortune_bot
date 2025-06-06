@@ -1,0 +1,9 @@
+---
+version: "2.1"
+services:
+  fortune_bot:
+    build: .
+    container_name: fortune_bot
+    environment:
+      TOKEN: __CHANGE_ME__
+    restart: always
