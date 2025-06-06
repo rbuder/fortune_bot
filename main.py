@@ -3,7 +3,6 @@
 import logging
 import config
 import wisdom
-import os
 
 from telegram import __version__ as TG_VER
 
@@ -20,6 +19,7 @@ if __version_info__ < (20, 0, 0, "alpha", 1):
     )
 from telegram import ForceReply, Update
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
+from telegram.constants import ParseMode
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -41,6 +41,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 /fortune odbs - list offensive fortune databases
 /fortune db $db - print a random fortune from a select db
 /fortune odb $odb - print a random offensive fortune from a select db
+/xkcd - get latest xkcd
 """
     await update.message.reply_text(help)
 
@@ -70,12 +71,33 @@ async def fortune(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             logger.info(db)
             await update.message.reply_text(wisdom.get_fortune(random=False, db=dbs[db]))
 
+async def xkcd(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.info("xkcd")
+    import feedparser
+    from bs4 import BeautifulSoup
+
+    rss_url = "https://xkcd.com/rss.xml"
+    feed = feedparser.parse(rss_url)
+
+    latest = feed['entries'][0]
+    logger.info(latest)
+    soup = BeautifulSoup(latest['summary'], 'html.parser')
+    img = soup.find_all("img")[0]
+
+    src = img.get("src")
+    alt = img.get("alt")
+
+    await update.message.reply_text(src)
+    await update.message.reply_text(alt)
+
+
 def main() -> None:
     application = Application.builder().token(config.TOKEN).build()
 
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("fortune", fortune))
+    application.add_handler(CommandHandler("xkcd", xkcd))
 
     application.run_polling()
 
