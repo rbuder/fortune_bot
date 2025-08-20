@@ -3,4 +3,5 @@
 import os
 
 TOKEN=os.getenv("TOKEN")
-REPOPATH="/opt/homebrew/share/games/fortunes"
+REPOPATH="/usr/share/games/fortunes"
+LUNCH=["getsome", "autobus", "kopitiam", "tuck shop", "food junction"]

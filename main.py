@@ -35,12 +35,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     help = """
 /help - print usage
-/fortune - print a random fortune
+/fortune - print a random fortune (defaults to bofh now)
 /fortune dbs - list fortune databases
 /fortune odbs - list offensive fortune databases
 /fortune db $db - print a random fortune from a select db
 /fortune odb $odb - print a random offensive fortune from a select db
 /comic [xkcd,turnoff.us,phdcomics,theoatmeal,invisiblebread] - get latest comic, default xkcd
+/lunch - print a random lunch option suitable for Labrador Tower lunch crew :)
 """
     await update.message.reply_text(help)
 
@@ -49,7 +50,8 @@ async def fortune(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     args = update.message.text.replace('/fortune', '').strip()
     logger.info(args)
     if args.split(' ')[0] not in allowed_args:
-        fortune = wisdom.get_fortune()
+        dbs = wisdom.dbs()
+        fortune = wisdom.get_fortune(random=False, db=dbs["bofh-excuses"])
         logger.info(fortune)
         await update.message.reply_text(fortune)
     else:
@@ -110,6 +112,12 @@ async def comic(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(alt)
 
 
+async def lunch(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.info("lunch")
+    import random
+    await update.message.reply_text(random.choice(config.LUNCH))
+
+
 def main() -> None:
     application = Application.builder().token(config.TOKEN).build()
 
@@ -117,6 +125,7 @@ def main() -> None:
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("fortune", fortune))
     application.add_handler(CommandHandler("comic", comic))
+    application.add_handler(CommandHandler("lunch", lunch))
 
     application.run_polling()
 
